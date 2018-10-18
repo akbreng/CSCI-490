@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;addcustomer.html, addvehicle.html, indexx.html, login.html, lotmanager.html, lotmap.html, register.html, styles.css, vehicle.html&apos; to &apos;WebContent&apos;" description="Move 9 resources to &apos;WebContent&apos;" destination="WebContent" element1="/LotManager/WebContent/addcustomer.html" element2="/LotManager/WebContent/addvehicle.html" element3="/LotManager/WebContent/indexx.html" element4="/LotManager/WebContent/login.html" element5="/LotManager/WebContent/lotmanager.html" element6="/LotManager/WebContent/lotmap.html" element7="/LotManager/WebContent/register.html" element8="/LotManager/WebContent/styles.css" element9="/LotManager/WebContent/vehicle.html" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="9" stamp="1539804710166" updateReferences="true"/>
+</session>

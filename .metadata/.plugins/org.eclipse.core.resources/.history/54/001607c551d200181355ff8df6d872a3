@@ -1,0 +1,114 @@
+<html>
+
+<head>
+	<title>AAA Lot Manger</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	</script>
+	<link rel="stylesheet" href="styles.css">
+
+<script>
+$(document).ready( function() {
+alert("running script");
+
+$("#btnAll").click(function() {
+	alert("clicked");
+	$.ajax( {
+		url: "http://localhost:8080/webserv1/WEB-INF/classes/Data",
+		type: "GET",
+		dataType: "text",
+	success: function(result) {
+		
+		alert("success"); 
+		var vehArray = JSON.parse(result);
+		alert(vehArray);
+		var output = "<h3>Vehicle List</h3>";
+		output += "<ul>";
+		for(var i=0; i<vehArray.length;i++)
+		{
+			output += "<li>" + vehArray[i].id + " (" + vehArray[i].make + "," + vehArray[i].model + ")" + "</li>"
+		}
+		output += "</ul>";
+		alert(output);
+		$("#p_retrieveAll").html(output); },
+	error:function(xhr) { 
+		alert("error");
+		$("#p_retrieveAll").html("Error:"+xhr.status+" "+xhr.statusText);}
+	} );
+	
+});
+
+$("#btnAllCus").click(function() {
+	alert("clicked");
+	$.ajax( {
+		url: "http://localhost:8080/webserv1/WEB-INF/classes/customers",
+		type: "GET",
+		dataType: "text",
+	success: function(result) {
+		
+		alert("success"); 
+		var cusArray = JSON.parse(result);
+		alert(cusArray);
+		var output = "<h3>Customer List</h3>";
+		output += "<ul>";
+		for(var i=0; i<cusArray.length;i++)
+		{
+			output += "<li>" + cusArray[i].id + " (" + cusArray[i].name + "," + cusArray[i].phone + ")" + "</li>"
+		}
+		output += "</ul>";
+		alert(output);
+		$("#p_retrieveAllCus").html(output); },
+	error:function(xhr) { 
+		alert("error");
+		$("#p_retrieveAllCus").html("Error:"+xhr.status+" "+xhr.statusText);}
+	} );
+	
+});
+
+
+
+});
+</script>
+
+</head>
+
+
+<body>
+
+<!-------- Navigation Bar -------->
+<h1><a href="lotmanager.html">Employee Main Menu</a></h1>
+
+<ul class="header">
+  <li class="header"><a href="vehicle.html" class="header">park/despense vehicles</a></li>
+  <li class="header"><a href="lotmap.html" class="header">lot map</a></li>
+  <li class="header"><a href="addvehicle.html" class="header">add vehicle</a></li>
+  <li class="header"><a href="addcustomer.html" class="header">add customer</a></li>
+  <li style="float:right"><a href="register.html" class="active">Register</a></li>
+  <li style="float:right"><a href="login.html" class="active">Login</a></li>
+</ul>
+
+
+<!-------------------------------->
+
+
+<div id="retrieveAll">
+<button id="btnAll">Click to Retrieve All</button>
+<p id="p_retrieveAll">Vehicles go here</p>
+</div>
+
+<div id="retrieveAll">
+<button id="btnAllCus">Click to Retrieve All</button>
+<p id="p_retrieveAllCus">Customers go here</p>
+</div>
+
+
+<div id="retrieveAll">
+	<button id="btnAll" class="block">Refresh</button>
+	<p id="p_retrieveAll">list of cars goes here</p>
+
+	
+</div>
+
+
+</body>
+
+</html>

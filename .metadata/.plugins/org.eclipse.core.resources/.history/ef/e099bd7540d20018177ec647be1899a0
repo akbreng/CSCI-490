@@ -1,0 +1,99 @@
+body {
+	background-color: #D3D3D3;
+	padding: 20px 15%;
+	font-family: monospace, serif;
+}
+
+h1 {
+	text-align: center;
+}
+
+h1 a {
+	text-decoration: none;
+	color: black; 
+}
+
+h2 {
+	text-align: center;
+	font-size: 28px;
+	color: #4CAF50;
+}
+
+p {
+	color: red;
+}
+
+block {
+
+}
+
+box {
+
+}
+
+ul.header {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333;
+}
+
+ul.login {
+	list-style-type: none;
+}
+
+li.header {
+	float: left;
+	border-right: 1px solid #bbb;	
+}
+
+li a.header {
+	display: block;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	color: white;
+}
+
+li a.header:hover {
+	background-color: #555;
+	color: white;
+}
+
+li a.active {
+	display: block;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	background-color: #4CAF50;
+	color: white;
+}
+
+li a.active:hover {
+	background-color: #32CD32;
+	color: white;
+}
+
+li.login {
+	text-align: center;
+	padding: 15px 10px;
+}
+
+
+
+button {
+	text-align: center;
+	padding: 14px 16px;
+	background-color: #4CAF50;
+	color: white;
+}
+
+button:hover{
+	background-color: #32CD32;
+}
+
+input.box{
+	padding: 10px 10px;
+	font-size:18px;
+}
