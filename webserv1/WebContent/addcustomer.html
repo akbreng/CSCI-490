@@ -2,20 +2,30 @@
 
 <head>
 	<title>AAA Lot Manger</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	</script>
 	<link rel="stylesheet" href="styles.css">
+	
+<script>
+$(document).ready( function() {
+alert("running script");
 
-$("#btnCreateVeh").click(function() {
+
+$("#btnCreateCus").click(function() {
 	alert("clicked");
-	var newUsername=document.getElementById("vehUsername").value;
-	var newPassword=document.getElementById("vehPassword").value;
-	var newFullName=document.getElementById("vehFullName").value;
-	var newAddress=document.getElementById("vehAddress").value;
-	var newZipcode=document.getElementById("vehZipcode").value;
-	var newState=document.getElementById("vehState").value;
-	var newPhone=document.getElementById("vehPhone").value;
-	var theData = "username="+newUsername+"&"+"pass="+newPassword+"&"+"name="+newFullName+"&"+"address="+newAddress+"&"+"zipcode="+newZipcode+"&"+"state="+newState+"&"+"phoneNum="+newPhone;
+	
+	
+	var newUsername=document.getElementById("Username").value;
+	var newPassword=document.getElementById("Password").value;
+	var newFullName=document.getElementById("FullName").value;
+	var newAddress=document.getElementById("Address").value;
+	var newZipcode=document.getElementById("Zipcode").value;
+	var newState=document.getElementById("State").value;
+	var newPhone=document.getElementById("Phone").value;
+	newAddress=+ " " + newState + ", " + newZipcode;
+	var theData = "Username="+newUsername+"&"+"Pass="+newPassword+"&"+"Name="+newFullName+"&"+"Address="+newAddress+"&"+"PhoneNum="+newPhone;
 	alert("Sending: "+theData);
-	var theUrl = "http://localhost:8080/webserv1/resources/ws2/ingredients/";
+	var theUrl = "http://localhost:8080/webserv1/resources/ws2/customers";
 	$.ajax( {
 		url: theUrl,
 		type: "POST",
@@ -34,7 +44,7 @@ $("#btnCreateVeh").click(function() {
 				
 				for(var i=0; i<ingArray.length; i++)
 				{
-					output += "<li>" + ingArray[i].name + " (" + ingArray[i].id + "," + ingArray[i].category + ")" + "</li>"
+					//output += "<li>" + ingArray[i].name + " (" + ingArray[i].id + "," + ingArray[i].category + ")" + "</li>"
 				}
 				output += "</ul>";
 				alert(output);
@@ -47,7 +57,11 @@ $("#btnCreateVeh").click(function() {
 				$("#p_createIng").html("Error:"+xhr.status+" "+xhr.statuxText);
 			},
 	} );
+	});
+	
 });
+
+</script>
 
 </head>
 
@@ -70,34 +84,19 @@ $("#btnCreateVeh").click(function() {
 <!-------------------------------->
 
 
-<div id="createIng">
-	<h4> Add Ingredient </h4>
-	<form id="f_creatIng">
-		<label for="t_ingNameCreate">Ingredient Name:
-		<input type="text" id="t_ingNameCreate" value="Type name here"/>
-		<label for="t_ingCategoryCreate">Ingredient Category: </label>
-		<input type="text" id="t_ingCategoryCreate" value="Type category here"/>
-		<input type="button" id="btnCreateIng" Value="Click to add this ingredient">
-	</form>
-<p id="p_createIng">Created Ingredient goes here</p>
-</div>
-
-
 <div id="Register">
-
-
-  <ul class="login">
-	<li><h2>Register<h2></li>
-	<li class="login"><input class="box" type="text" id="vehUsername" placeholder="Username"/></li>
-	<li class="login"><input class="box" type="text" id="vehPassword" placeholder="Password"/></li>
-	<li class="login"><input class="box" type="text" id="vehFullName" placeholder="Full Name"/></li>
-	<li class="login"><input class="box" type="text" id="vehAddress" placeholder="Address"/></li>
-	<li class="login"><input class="box" type="text" id="vehZipcode" placeholder="Zipcode"/></li>
-	<li class="login"><input class="box" type="text" id="vehState" placeholder="State"/></li>
-	<li class="login"><input class="box" type="text" id="vehPhone" placeholder="Phone #"/></li>
-	<li class="login"><button id="btnAll" class="block">Done</button></li>
-	<li class="login"><p id="p_retrieveAll"></p></li>
-  </ul>
+<h2>Register</h2>
+  <form id="f_createIng">
+	<input class="box" type="text" id="Username" placeholder="Username"/>
+	<input class="box" type="text" id="Password" placeholder="Password"/>
+	<input class="box" type="text" id="FullName" placeholder="Full Name"/>
+	<input class="box" type="text" id="Address" placeholder="Address"/>
+	<input class="box" type="text" id="Zipcode" placeholder="Zipcode"/>
+	<input class="box" type="text" id="State" placeholder="State"/>
+	<input class="box" type="text" id="Phone" placeholder="Phone #"/>
+	<button id="btnCreateCus" class="block">Done</button>
+	<p id="p_createIng"></p>
+  </form>
 </div>
 
 </body>
