@@ -2,8 +2,63 @@
 
 <head>
 	<title>AAA Lot Manger</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	</script>
 	<link rel="stylesheet" href="styles.css">
+	
+<script>
+	$(document).ready( function() {
+		alert("running");
+		
+	$("#btnAll").click(function() {
+		alert("clicked");
+		$.ajax( {
+			url: "http://localhost:8080/webserv1/resources/ws2/customers",
+			type: "GET", 
+		dataType: "text",
+		success: function(result) {
+			
+			alert("success");
+			var customerArr=JSON.parse(result);
+			alert(customerArr);
+			var output= "";
+			output += "<ul>";
+			
+			var user=document.getElementById("username").value;
+			var pass=document.getElementById("password").value;
+			
+			
+			for(var i=0; i<customerArr.length; i++) {
+				output += "<li>" + customerArr[i].username + " , " + customerArr[i].pass + "</li>";
+				if (customerArr[i].username == user) {
+					if (customerArr[i].pass == pass) {
+						alert("successfully logged on")
+						location.href="http://localhost:8080/webserv1/vehicle.html"
+					} else {
+						alert("incorrect username or password");
+					}
+				}else {
+					alert("incorrect username or password");
+				}
+			}
+			output +="</ul>";
+			
+					
+		}
+			
+		});
+		
+	});
+	
+	});
+	
+	
+</script>
+	
 </head>
+
+
+
 
 
 <body>
@@ -26,16 +81,16 @@
 
 <div id="Login">
 
-
+<form method="post">
   <ul class="login">
-	<li><h2>Sign in<h2></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Username"/></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Password"/></li>
+	<li><h2>Sign in<h2></li>  
+	<p><input id="username"></p>
+	<p><input id="password"></p>
 	<li class="login"><button id="btnAll" class="block">Login</button></li>
 	<li class="login"><p id="p_retrieveAll"></p></li>
   </ul>
 </div>
-
+</form>
 </body>
 
 </html>
