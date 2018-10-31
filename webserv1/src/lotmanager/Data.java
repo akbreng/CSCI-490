@@ -36,56 +36,70 @@ public class Data{
 			connectStr, username, password);
 		return(con);
 	}
-	/*
+	
 	@Path("/customers")
 	@POST
 	@Produces("text/plain")
-	@Consumes("application/x-www-form-urlencoded")
-	public Response createCustomer(MultivaluedMap<String,String> formFields) throws SQLException, ClassNotFoundException{
-		System.out.println("In create Ingredient");
-		
-		String newName = formFields.getFirst("name");
-		System.out.println("name stored");
-		String newCategory = formFields.getFirst("category");
-		System.out.println("category stored");
+	@Consumes("application/x-www-form-urlencoded")//theUsername, thePass, theName, theAddress, thePhoneNum
+	public Response createCustomer(MultivaluedMap<String,String>formFields) throws SQLException, ClassNotFoundException{
+		System.out.println("In create customer");
 		
 		
-		String connectStr="jdbc:mysql://localhost:3306/fooddb";
-		String username="root";
-		String password="csci330pass";
-		String driver="com.mysql.jdbc.Driver";
-		Class.forName(driver);
-		Connection con = DriverManager.getConnection(
-				connectStr, username, password);
+		//theUsername, thePass, theName, theAddress, thePhoneNum
+		String newUsername = formFields.getFirst("Username");
+		System.out.println("name Username: " + newUsername);
+		String newPass = formFields.getFirst("Pass");
+		System.out.println("category Pass");
+		String newName = formFields.getFirst("Name");
+		System.out.println("category Name");
+		String newAddress = formFields.getFirst("Address");
+		System.out.println("category Address");
+		String newPhoneNum = formFields.getFirst("PhoneNum");
+		System.out.println("category PhoneNum");
+		
+		Connection con = Connect();
 
 		
-		System.out.println("to add: "+newName + " " + newCategory);
+		System.out.println("to add: "+newName);
+		                                      //(type, name, address, phoneNum, username, pass)
+		String SQLstate = "INSERT INTO user (type, Username, Pass, Name, Address, PhoneNum) values(?,?,?,?,?,?)";
+		System.out.println(SQLstate);
+		PreparedStatement preStatement = con.prepareStatement(SQLstate);
+		preStatement.setString(1, "customer");
+		preStatement.setString(2, newUsername);	
+		preStatement.setString(3, newPass);
+		preStatement.setString(4, newName);	
+		preStatement.setString(5, newAddress);
+		preStatement.setString(6, newPhoneNum);	
 		
-		String SQLAll = "INSERT INTO ingredient (name, category, id) values(?,?,null)";
-		PreparedStatement preStatement = con.prepareStatement(SQLAll);
-		preStatement.setString(1, newName);	
-		preStatement.setString(2, newCategory);
+		
 		
 		int res = preStatement.executeUpdate();
 		
 		System.out.println("Result is : "+res);
 		
 		if(res==1) {
-			PreparedStatement retrieveStmt = con.prepareStatement("Select * from ingredient where name=? and category=?");
-			retrieveStmt.setString(1,  newName);;
-			retrieveStmt.setString(2, newCategory);
-			ResultSet rs = retrieveStmt.executeQuery();
+			String retrieveStmt = "Select * from user where Username=? and Pass=?";
+			preStatement = con.prepareStatement(retrieveStmt);
+			preStatement.setString(1, newUsername);	
+			preStatement.setString(2, newPass);
 			
+			ResultSet rs = preStatement.executeQuery();
+					
 			String result="";
 			int count = 0;
 			int MAX = 100;
-			Ingredient[] ingArray = new Ingredient[MAX];
+			User[] ingArray = new User[MAX];
 			
 			while (rs.next()) {
-				int theId = rs.getInt("id");
+				int theId = rs.getInt("userID");
+				String theType = rs.getString("type");
 				String theName = rs.getString("name");
-				String theCategory = rs.getString("category");
-				Ingredient ing = new Ingredient(theId, theName, theCategory);
+				String theAddress = rs.getString("address");
+				String theUsername = rs.getString("username");
+				String thePass = rs.getString("pass");
+				int thePhoneNum = rs.getInt("phoneNum");
+				User ing = new User(theId, theUsername, thePass, theType, theName, theAddress, thePhoneNum);
 				System.out.println(ing);
 				ingArray[count] = ing;
 				count++;
@@ -104,16 +118,15 @@ public class Data{
 		}
 		else {
 			Gson theGsonobj = new Gson();
-			Ingredient[] blankIngArray = new Ingredient[1];
-			blankIngArray[0] = new Ingredient(0,"none","none");
+			User[] blankIngArray = new User[1];
+			blankIngArray[0] = new User(0,"none","none","none","none","none",0);
 			String blankResult = theGsonobj.toJson(blankIngArray);
 			//return blankResult;		
 			return Response.status(700).build();
 		}
 			
 	}
-}
-*/
+
 	@Path("/vehicles")
 	@GET
 	@Produces("text/plain")
@@ -181,7 +194,7 @@ public class Data{
 		 * The result variable is just used to compile all the
 		 * data into one string.
 		 */
-		 
+
 		 //ArrayList<Matrices> list = new ArrayList<Matrices>();
 		ArrayList<User> customers = new ArrayList<User>();
 		while(rs.next()){
