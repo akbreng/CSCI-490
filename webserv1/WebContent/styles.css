@@ -27,8 +27,8 @@ block {
 
 }
 
-box {
-
+input[type=text] {
+	padding: 15px 40px;
 }
 
 ul.header {

@@ -3,6 +3,50 @@
 <head>
 	<title>AAA Lot Manger</title>
 	<link rel="stylesheet" href="styles.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	</script>
+	
+	<script>
+$(document).ready( function() {
+alert("running script");
+
+
+$("#btnCreateVeh").click(function() {
+	alert("clicked");
+	
+	
+	var newMake=document.getElementById("Make").value;
+	var newModel=document.getElementById("Model").value;
+	var newPlate=document.getElementById("Plate").value;
+	var newColor=document.getElementById("Color").value;
+	var newProductionYear=document.getElementById("ProductionYear").value;
+	var newCustomerID=document.getElementById("CustomerID").value;
+	var theData = "Make="+newMake+"&"+"Model="+newModel+"&"+"Plate="+newPlate+"&"+"Color="+newColor+"&"+"ProductionYear="+newProductionYear+"&"+"CustomerID="+newCustomerID;
+	alert("Sending: "+theData);
+	var theUrl = "http://localhost:8080/webserv1/resources/ws2/vehicles";
+	$.ajax( {
+		url: theUrl,
+		type: "POST",
+		dataType: "text",
+		contentType: "application/x-www-form-urlencoded",
+		data: theData,
+		
+		success: 
+			function(result) {
+				alert("success: "+status);				
+				$("#p_createIng").html("Successfully Added");
+			},
+		error:
+			function(xhr, status, errorThrown) {
+				alert("error: " + status+" e: "+errorThrown);
+				$("#p_createIng").html("Error:"+xhr.status+" "+xhr.statuxText);
+			},
+	});
+	
+});
+});
+
+</script>
 </head>
 
 
@@ -24,19 +68,17 @@
 <!-------------------------------->
 
 <div id="Register">
-
-
-  <ul class="login">
-	<li><h2>Register</h2></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Make"/></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Model"/></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Year"/></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Plate"/></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Color"/></li>
-	<li class="login"><input class="box" type="text" id="t_ingredName" placeholder="Customer ID"/></li>
-	<li class="login"><button id="btnAll" class="block">Done</button></li>
-	<li class="login"><p id="p_retrieveAll"></p></li>
-  </ul>
+  <h2>Register</h2>
+  <form id="f_createIng">
+	<input class="box" type="text" id="Make" placeholder="Make" style="position:center"/>
+	<input class="box" type="text" id="Model" placeholder="Model" style="position:center"/>
+	<input class="box" type="text" id="Plate" placeholder="Plate" style="position:center"/>
+	<input class="box" type="text" id="Color" placeholder="Color" style="position:center"/>
+	<input class="box" type="text" id="ProductionYear" placeholder="ProductionYear" style="position:center"/>
+	<input class="box" type="text" id="CustomerID" placeholder="Owner ID" style="position:center"/>
+ </form>
+  <button id="btnCreateVeh" class="block">Done</button>
+  <p id="p_createIng"></p>
 </div>
 
 </body>

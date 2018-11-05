@@ -22,7 +22,7 @@ $("#btnCreateCus").click(function() {
 	var newZipcode=document.getElementById("Zipcode").value;
 	var newState=document.getElementById("State").value;
 	var newPhone=document.getElementById("Phone").value;
-	newAddress=+ " " + newState + ", " + newZipcode;
+	newAddress = newAddress + " " + newState + ", " + newZipcode;
 	var theData = "Username="+newUsername+"&"+"Pass="+newPassword+"&"+"Name="+newFullName+"&"+"Address="+newAddress+"&"+"PhoneNum="+newPhone;
 	alert("Sending: "+theData);
 	var theUrl = "http://localhost:8080/webserv1/resources/ws2/customers";
@@ -34,31 +34,18 @@ $("#btnCreateCus").click(function() {
 		data: theData,
 		
 		success: 
-			function(result,status,jqxhr) {
-				alert("success: "+status);
-				
-				var ingArray = JSON.parse(result);
-				alert(ingArray);
-				var output="<h3>Just added</h3>";
-				output += "<ul>";
-				
-				for(var i=0; i<ingArray.length; i++)
-				{
-					//output += "<li>" + ingArray[i].name + " (" + ingArray[i].id + "," + ingArray[i].category + ")" + "</li>"
-				}
-				output += "</ul>";
-				alert(output);
-				
-				$("#p_createIng").html(output);
+			function(result) {
+				alert("success: "+status);				
+				$("#p_createIng").html("Successfully Added");
 			},
 		error:
 			function(xhr, status, errorThrown) {
 				alert("error: " + status+" e: "+errorThrown);
 				$("#p_createIng").html("Error:"+xhr.status+" "+xhr.statuxText);
 			},
-	} );
 	});
 	
+});
 });
 
 </script>
@@ -85,18 +72,18 @@ $("#btnCreateCus").click(function() {
 
 
 <div id="Register">
-<h2>Register</h2>
+  <h2>Register</h2>
   <form id="f_createIng">
-	<input class="box" type="text" id="Username" placeholder="Username"/>
-	<input class="box" type="text" id="Password" placeholder="Password"/>
-	<input class="box" type="text" id="FullName" placeholder="Full Name"/>
-	<input class="box" type="text" id="Address" placeholder="Address"/>
-	<input class="box" type="text" id="Zipcode" placeholder="Zipcode"/>
-	<input class="box" type="text" id="State" placeholder="State"/>
-	<input class="box" type="text" id="Phone" placeholder="Phone #"/>
-	<button id="btnCreateCus" class="block">Done</button>
-	<p id="p_createIng"></p>
+	<input class="box" type="text" id="Username" placeholder="Username" style="position:center"/>
+	<input class="box" type="text" id="Password" placeholder="Password" style="position:center"/>
+	<input class="box" type="text" id="FullName" placeholder="Full Name" style="position:center"/>
+	<input class="box" type="text" id="Address" placeholder="Address" style="position:center"/>
+	<input class="box" type="text" id="Zipcode" placeholder="Zipcode" style="position:center"/>
+	<input class="box" type="text" id="State" placeholder="State" style="position:center"/>
+	<input class="box" type="text" id="Phone" placeholder="Phone #" style="position:center"/>
   </form>
+  <button id="btnCreateCus" class="block">Done</button>
+  <p id="p_createIng"></p>
 </div>
 
 </body>

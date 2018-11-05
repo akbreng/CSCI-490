@@ -37,6 +37,190 @@ public class Data{
 		return(con);
 	}
 	
+	@Path("/park")
+	@POST
+	@Produces("text/plain")
+	@Consumes("application/x-www-form-urlencoded")
+	public Response park(MultivaluedMap<String,String>formFields) throws SQLException, ClassNotFoundException{
+		System.out.println("In Park");
+		
+		
+		String newVehicleID = formFields.getFirst("VehicleID");
+		System.out.println("category VehicleID: " + newVehicleID);
+		
+		Connection con = Connect();
+
+		
+		System.out.println("to add: "+newVehicleID);
+		
+		PreparedStatement preStatement;
+		
+		String retrieveSlot = "Select slotID from lot";
+		preStatement = con.prepareStatement(retrieveSlot);
+
+		ResultSet rs = preStatement.executeQuery();
+		
+		boolean full = true; 
+		int i = 1, slot=0;
+		do {
+			slot = rs.getInt("slotID");
+			if (slot != i) {
+				slot = i;
+				full = false;
+			}
+			i++;
+			
+		} while (rs.next()&& full);
+		
+		if (!full) {
+			String SQLstate = "INSERT INTO lot (vehicleID,slotID) values(?,?)";
+			System.out.println(SQLstate);
+			preStatement = con.prepareStatement(SQLstate);
+			preStatement.setString(1, newVehicleID);
+			preStatement.setInt(2, slot);	
+					
+		int res = preStatement.executeUpdate();
+		
+		System.out.println("Result is : "+res);
+		
+		if(res==1) {
+			String retrieveStmt = "Select * from lot where vehicleID=? and slotID=?";
+			preStatement = con.prepareStatement(retrieveStmt);
+			preStatement.setString(1, newVehicleID);	
+			preStatement.setInt(2, slot);
+			
+			rs = preStatement.executeQuery();
+					
+			String result="";
+			int count = 0;
+			int MAX = 100;
+			Slot[] ingArray = new Slot[MAX];
+			
+			
+			while (rs.next()) {
+				int theVehID = rs.getInt("vehicleID");
+				int theSlotID = rs.getInt("slotID");
+				Slot ing = new Slot(theVehID, theSlotID);
+				System.out.println(ing);
+				ingArray[count] = ing;
+				count++;
+			}
+			
+			ingArray = Arrays.copyOf(ingArray, count);
+			
+			Gson theGsonobj = new Gson();
+			result = theGsonobj.toJson(ingArray);
+			System.out.println("the json: \n" + result);
+			
+			ResponseBuilder rb = Response.ok(result, MediaType.TEXT_PLAIN);
+			rb.status(201);
+			return rb.build();
+			//return result;
+			 
+		}
+		else { 
+			return Response.status(700).build();
+		}
+		}
+		else {
+			return Response.status(700).build();
+		}
+		
+			
+	}
+	
+	@Path("/vehicles")
+	@POST
+	@Produces("text/plain")
+	@Consumes("application/x-www-form-urlencoded")//theUsername, thePass, theName, theAddress, thePhoneNum
+	public Response createVehicles(MultivaluedMap<String,String>formFields) throws SQLException, ClassNotFoundException{
+		System.out.println("In create Vehicle");
+		
+		
+		//theMake, theModel, thePlate, theColor, theProductionYear, theCustomerID
+		String newMake = formFields.getFirst("Make");
+		System.out.println("name Username: " + newMake);
+		String newModel = formFields.getFirst("Model");
+		System.out.println("category Model: " + newModel);
+		String newPlate = formFields.getFirst("Plate");
+		System.out.println("category Name: " + newPlate);
+		String newColor = formFields.getFirst("Color");
+		System.out.println("category Address: " + newColor);
+		String newProductionYear = formFields.getFirst("ProductionYear");
+		System.out.println("category ProductionYear: " + newProductionYear);
+		String newCustomerID = formFields.getFirst("CustomerID");
+		System.out.println("nategory CustomerID: " + newCustomerID);
+		
+		Connection con = Connect();
+
+		
+		System.out.println("to add: "+newPlate);
+
+		String SQLstate = "INSERT INTO vehicle (make, model, plate, color, productionYear, customerID) values(?,?,?,?,?,?)";
+		System.out.println(SQLstate);
+		PreparedStatement preStatement = con.prepareStatement(SQLstate);
+		preStatement.setString(1, newMake);
+		preStatement.setString(2, newModel);	
+		preStatement.setString(3, newPlate);
+		preStatement.setString(4, newColor);	
+		preStatement.setString(5, newProductionYear);
+		preStatement.setString(6, newCustomerID);	
+		
+		
+		
+		int res = preStatement.executeUpdate();
+		
+		System.out.println("Result is : "+res);
+		
+		if(res==1) {
+			String retrieveStmt = "Select * from vehicle where customerID=? and plate=?";
+			preStatement = con.prepareStatement(retrieveStmt);
+			preStatement.setString(1, newCustomerID);	
+			preStatement.setString(2, newPlate);
+			
+			ResultSet rs = preStatement.executeQuery();
+					
+			String result="";
+			int count = 0;
+			int MAX = 100;
+			Vehicle[] ingArray = new Vehicle[MAX];
+			
+			while (rs.next()) {
+				int theID = rs.getInt("vehicleID");
+				String theMake = rs.getString("make");
+				String theModel = rs.getString("model");
+				String thePlate = rs.getString("plate");
+				String theColor = rs.getString("color");
+				int theProductionYear = rs.getInt("productionYear");
+				int theCustomerID = rs.getInt("customerID");
+				Vehicle ing = new Vehicle(theID, theMake, theModel, thePlate, theColor, theProductionYear, theCustomerID);
+				System.out.println(ing);
+				ingArray[count] = ing;
+				count++;
+			}
+			
+			ingArray = Arrays.copyOf(ingArray, count);
+			
+			Gson theGsonobj = new Gson();
+			result = theGsonobj.toJson(ingArray);
+			System.out.println("the json: \n" + result);
+			
+			ResponseBuilder rb = Response.ok(result, MediaType.TEXT_PLAIN);
+			rb.status(201);
+			return rb.build();
+			//return result;
+		}
+		else {
+			Gson theGsonobj = new Gson();
+			Vehicle[] blankIngArray = new Vehicle[1];
+			blankIngArray[0] = new Vehicle(0,"none","none","none","none",0,0);
+			String blankResult = theGsonobj.toJson(blankIngArray);
+			//return blankResult;		
+			return Response.status(700).build();
+		}
+			
+	}
+	
 	@Path("/customers")
 	@POST
 	@Produces("text/plain")
@@ -127,6 +311,7 @@ public class Data{
 			
 	}
 
+	
 	@Path("/vehicles")
 	@GET
 	@Produces("text/plain")
