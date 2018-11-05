@@ -29,7 +29,7 @@ $("#btnPark").click(function() {
 		success: 
 			function(result) {
 				alert("success: "+status);				
-				$("#p_createIng").html("Successfully Parked");
+				$("#p_createIng").html(result);
 			},
 		error:
 			function(xhr, status, errorThrown) {
@@ -58,7 +58,7 @@ $("#btnDispense").click(function() {
 		success: 
 			function(result) {
 				alert("success: "+status);				
-				$("#p_createIng").html("Successfully Dispensed");
+				$("#p_createIng").html(result);
 			},
 		error:
 			function(xhr, status, errorThrown) {

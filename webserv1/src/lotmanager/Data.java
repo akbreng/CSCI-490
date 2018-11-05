@@ -25,6 +25,51 @@ import com.google.gson.Gson;
 
 @Path("ws2")
 public class Data{
+		
+	@Path("/dispense")
+	@POST
+	@Produces("text/plain")
+	@Consumes("application/x-www-form-urlencoded")
+	public Response dispense(MultivaluedMap<String,String>formFields) throws SQLException, ClassNotFoundException{
+		int slot=0;
+		System.out.println("In Dispense");
+		
+		String newVehicleID = formFields.getFirst("VehicleID");
+		System.out.println("VehicleID: " + newVehicleID);
+		
+		Connection con = Connect();
+
+		PreparedStatement preStatement;
+		
+		String retrieveSlot = "Select slotID from lot where vehicleID = ?";
+		preStatement = con.prepareStatement(retrieveSlot);
+		preStatement.setString(1,newVehicleID);
+		ResultSet rs = preStatement.executeQuery();
+		if (rs.next()) {
+			slot = rs.getInt("slotID");
+		}
+		
+		if(slot!=0) {
+			System.out.println("Remove vehicleID:"+newVehicleID+" from slot "+slot);
+			String SQLstate = "DELETE FROM lot where vehicleID = ?";
+			preStatement = con.prepareStatement(SQLstate);
+			preStatement.setString(1, newVehicleID);			
+			preStatement.executeUpdate();
+			
+			String er = "VehicleID:" + newVehicleID + " removed from SlotID:"+slot;
+			ResponseBuilder rb = Response.ok(er, MediaType.TEXT_PLAIN);
+			rb.status(201);
+			return rb.build();
+			
+		}
+		else {
+			String er = "Vehicle not found in lot";
+			
+			ResponseBuilder rb = Response.ok(er, MediaType.TEXT_PLAIN);
+			rb.status(201);
+			return rb.build();
+		}
+	}
 
 	public Connection Connect() throws SQLException, ClassNotFoundException {
 		String connectStr="jdbc:mysql://localhost:3306/lotdb";
@@ -42,8 +87,9 @@ public class Data{
 	@Produces("text/plain")
 	@Consumes("application/x-www-form-urlencoded")
 	public Response park(MultivaluedMap<String,String>formFields) throws SQLException, ClassNotFoundException{
-		System.out.println("In Park");
 		
+		System.out.println("In Park");
+		int lotsize = 20;
 		
 		String newVehicleID = formFields.getFirst("VehicleID");
 		System.out.println("category VehicleID: " + newVehicleID);
@@ -60,19 +106,25 @@ public class Data{
 
 		ResultSet rs = preStatement.executeQuery();
 		
-		boolean full = true; 
-		int i = 1, slot=0;
-		do {
-			slot = rs.getInt("slotID");
-			if (slot != i) {
-				slot = i;
-				full = false;
+		boolean found = false; 
+		int i = 0, slot=0;
+		boolean[] slots = new boolean[lotsize+1];
+		while(rs.next()) {
+			slots[rs.getInt("slotID")-1]=true;
+		}
+		
+		while(!found && i<lotsize) {
+			if (!slots[i])
+			{
+				slot = i+1;
+				found = true;
 			}
 			i++;
-			
-		} while (rs.next()&& full);
+		}
 		
-		if (!full) {
+		System.out.print("add vehicle to: "+slot+"   "+found);
+		
+		if (found) {
 			String SQLstate = "INSERT INTO lot (vehicleID,slotID) values(?,?)";
 			System.out.println(SQLstate);
 			preStatement = con.prepareStatement(SQLstate);
@@ -96,10 +148,10 @@ public class Data{
 			int MAX = 100;
 			Slot[] ingArray = new Slot[MAX];
 			
-			
+			int theVehID=0,theSlotID=0;
 			while (rs.next()) {
-				int theVehID = rs.getInt("vehicleID");
-				int theSlotID = rs.getInt("slotID");
+				theVehID = rs.getInt("vehicleID");
+				theSlotID = rs.getInt("slotID");
 				Slot ing = new Slot(theVehID, theSlotID);
 				System.out.println(ing);
 				ingArray[count] = ing;
@@ -108,25 +160,24 @@ public class Data{
 			
 			ingArray = Arrays.copyOf(ingArray, count);
 			
-			Gson theGsonobj = new Gson();
-			result = theGsonobj.toJson(ingArray);
-			System.out.println("the json: \n" + result);
-			
+			result = "parked vehicleID:"+ theVehID + " in Slot: " + theSlotID;
+			System.out.print(result);
 			ResponseBuilder rb = Response.ok(result, MediaType.TEXT_PLAIN);
 			rb.status(201);
 			return rb.build();
 			//return result;
 			 
+		}else {
+			return Response.status(700).build();
+		}
 		}
 		else { 
-			return Response.status(700).build();
-		}
-		}
-		else {
-			return Response.status(700).build();
-		}
-		
+			String result = "lot is full";
 			
+			ResponseBuilder rb = Response.ok(result, MediaType.TEXT_PLAIN);
+			rb.status(201);
+			return rb.build();
+		}
 	}
 	
 	@Path("/vehicles")
