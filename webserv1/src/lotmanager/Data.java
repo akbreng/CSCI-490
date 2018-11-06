@@ -307,7 +307,7 @@ public class Data{
 	@Path("/vehicles")
 	@GET
 	@Produces("text/plain")
-	public String getVehicle() throws SQLException, ClassNotFoundException {
+	public String getVehicles() throws SQLException, ClassNotFoundException {
 		
 		Connection con = Connect();
 
@@ -355,7 +355,7 @@ public class Data{
 	@Path("/customers")
 	@GET
 	@Produces("text/plain")
-	public String getCustomer() throws SQLException, ClassNotFoundException {
+	public String getCustomers() throws SQLException, ClassNotFoundException {
 		
 		Connection con = Connect();
 
@@ -391,5 +391,49 @@ public class Data{
 		}
 		Gson GsonObj = new Gson();
 		return GsonObj.toJson(customers);	
+	}
+	
+	/**
+	 * This method returns slots from DB
+	 * 11-8-2018
+	 * By:Aaron Brengelman
+	 * @return Gson slot object
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
+	@Path("/slots")
+	@GET
+	@Produces("text/plain")
+	public String getSlots() throws SQLException, ClassNotFoundException {
+		
+		Connection con = Connect();
+
+		/* Creates a statement object to be executed on
+		 * the attached database.
+		 */
+		PreparedStatement pstmt = con.prepareStatement("SELECT * FROM lot");
+
+		/* Executes a database query and returns the results
+		 * as a ResultSet object
+		 */
+		ResultSet rs = pstmt.executeQuery();
+
+		/* This snippet shows how to parse a ResultSet object.
+		 * Basically, you loop through the object sort of like
+		 * a linked list, and use the getX methods to get data
+		 * from the current row. Each time you call rs.next()
+		 * it advances to the next row returned.
+		 * The result variable is just used to compile all the
+		 * data into one string.
+		 */
+
+		ArrayList<Slot> slots = new ArrayList<Slot>();
+		while(rs.next()){
+			int theSlotID = rs.getInt("slotID");
+			int theVehicleID = rs.getInt("vehicleID");
+			slots.add(new Slot(theSlotID, theVehicleID));
+		}
+		Gson GsonObj = new Gson();
+		return GsonObj.toJson(slots);	
 	}
 }
