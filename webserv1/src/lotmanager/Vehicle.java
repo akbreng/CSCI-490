@@ -12,6 +12,14 @@ public class Vehicle {
 		this.custId =custId;
 	}
 	
+	public Vehicle(String make, String model, String plate, String color, String year, String custId){
+		this.make = make;
+		this.model = model;
+		this.plate = plate;
+		this.color = color;
+		this.year = Integer.parseInt(year);
+		this.custId = Integer.parseInt(custId);
+	}
 	public Vehicle(int id, String make, String model, String plate, String color, int year, int custId){
 		this.id = id;
 		this.make = make;
@@ -19,7 +27,7 @@ public class Vehicle {
 		this.plate = plate;
 		this.color = color;
 		this.year = year;
-		this.custId =custId;
+		this.custId = custId;
 	}
 	public int getId() {
 		return id;

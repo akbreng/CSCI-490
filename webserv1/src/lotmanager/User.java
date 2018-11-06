@@ -1,6 +1,6 @@
 package lotmanager;
 
-public class User<String> {
+public class User {
 		private int id, phone;
 		private String username, pass, type, name, address;
 		public User(String username, String pass, String type, String name, String address, int phone){
